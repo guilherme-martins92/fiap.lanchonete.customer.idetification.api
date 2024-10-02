@@ -49,4 +49,4 @@ jobs:
         run: |
           # Exemplo com AWS CLI, você pode ajustar de acordo com a sua necessidade
           zip -r WebApiIdendification.zip .   # Zipar o código
-          aws lambda update-function-code --function-name WebApiIdendification-rCoUj6328ZDY --zip-file fileb://WebApiIdendification.zip
+          aws lambda update-function-code --function-name WebApiIdendification --zip-file fileb://WebApiIdendification.zip
