@@ -1,0 +1,52 @@
+name: Build, Test, and Deploy .NET 8 Application
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # Job 1: Build
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4  # Suporte para Node.js 20
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4  # Suporte para Node.js 20
+        with:
+          dotnet-version: '8.x'
+
+      - name: Restore dependencies
+        run: dotnet restore Src/WebApi/WebApi.csproj
+
+      - name: Build
+        run: dotnet build Src/WebApi/WebApi.csproj --configuration Release
+
+  # Job 3: Deploy
+  deploy:
+    runs-on: ubuntu-latest
+
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Deploy to AWS Lambda
+        run: |
+          # Exemplo com AWS CLI, você pode ajustar de acordo com a sua necessidade
+          zip -r WebApiIdendification.zip .   # Zipar o código
+          aws lambda update-function-code --function-name WebApiIdendification-rCoUj6328ZDY --zip-file fileb://WebApiIdendification.zip
